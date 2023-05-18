@@ -1,20 +1,18 @@
 #include <iostream>
 #include <vector>
 #include <thread>
-#include <atomic>
-#include <unistd.h>
-#include <algorithm>
 #include <mutex>
-#include <utility>
 
 std::mutex vector_mutex;
 
-void addToVector(std::vector<int> &shared, int num){
+void addToVector(std::vector<int> &shared, int num)
+{
     std::lock_guard<std::mutex> lock(vector_mutex);
     shared.push_back(num);
 }
 
-int main(){
+int main()
+{
     std::vector<int> child_ids;
     std::thread t1(addToVector, std::ref(child_ids), 1);
     std::thread t2(addToVector, std::ref(child_ids), 2);
@@ -24,10 +22,10 @@ int main(){
     t2.join();
     t3.join();
 
-    for(const int& i : child_ids){
+    for (const int &i : child_ids)
+    {
         std::cout << i << "\n";
     }
-
 
     return 0;
 }
